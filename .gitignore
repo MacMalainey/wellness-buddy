@@ -1,2 +1,8 @@
-wellnessbuddy/migrations
-wellness_app/.vscode/launch.json
+wellness_app/migrations
+db.sqlite3
+*.pyc
+# Local django server on one of the demo clients adding this here so it doesn't get pushed
+localdebug 
+manage.py
+.vscode
+

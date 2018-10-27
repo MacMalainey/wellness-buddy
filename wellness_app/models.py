@@ -12,8 +12,6 @@ class UserInfo(models.Model):
     # Amazon user ID, needed to store the aata specific to a user.
     user_id = models.CharField(max_length=255, primary_key=True)
 
-    wellness_record = models.CharField(max_length=62)
+    wellness_record = models.CharField()
 
     long_term_record = models.FileField(upload_to='archived_records/')
-
-    
