@@ -14,4 +14,28 @@ class UserInfo(models.Model):
 
     wellness_record = models.CharField()
 
-    long_term_record = models.FileField(upload_to='archived_records/')
+class Compliment(models.Model):
+
+    message = models.CharField()
+
+class Tip(models.Model):
+
+    message = models.CharField()
+
+    # Constants for levels of mood
+    # Ordered by quality of mood in ascending order
+    LEVEL_CRITICAL = 0
+    LEVEL_LOW = 1
+    LEVEL_MEDIUM = 2
+    LEVEL_GOOD = 3
+    LEVEL_NONE = 4
+
+    LEVEL_CHOICES = (
+        (LEVEL_CRITICAL, 'CRITICAL'),
+        (LEVEL_LOW, 'LOW'),
+        (LEVEL_MEDIUM, 'MEDIUM'),
+        (LEVEL_GOOD, 'GOOD'),
+        (LEVEL_NONE, 'NONE')
+    )
+
+    level = models.SmallIntegerField(choices=LEVEL_CHOICES, null=False)

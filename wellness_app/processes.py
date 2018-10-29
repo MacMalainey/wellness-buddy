@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .models import UserInfo
+from .models import UserInfo, Tip
 import statistics as stat
 import math
 
@@ -8,12 +8,12 @@ def getResponseType(data):
 
     # If it was a 0 day it is automatically critical
     if(data[0] < 2):
-        return Response(Response.LEVEL_CRITICAL)
+        return Response(Tip.LEVEL_CRITICAL)
 
     daysStored = len(data)
 
     if daysStored < 5:
-        return Response(Response.LEVEL_NONE)
+        return Response(Tip.LEVEL_NONE)
     
     processable = []
 
@@ -42,7 +42,7 @@ def getResponseType(data):
         deviation_week = stat.pvariance(data, mu=mean_week)
     else:
         if(mean_3 is None):
-            return Response(Response.LEVEL_NONE)
+            return Response(Tip.LEVEL_NONE)
         else:
             mean_week = None
             deviation_week = None
@@ -66,38 +66,38 @@ def getResponseType(data):
     if deviation_week > 4:
             # Base it soley on today's value
             if data[0] < 4:
-                return Response(Response.LEVEL_LOW)
+                return Response(Tip.LEVEL_LOW)
             elif data[0] < 7:
-                return Response(Response.LEVEL_MEDIUM)
+                return Response(Tip.LEVEL_MEDIUM)
             else:
-                return Response(Response.LEVEL_GOOD)
+                return Response(Tip.LEVEL_GOOD)
 
     if mean_3 is None:
         if data[0] < 4 and mean_week < 4 and mean_month > 7:
-            return Response(Response.LEVEL_CRITICAL)
+            return Response(Tip.LEVEL_CRITICAL)
         elif data[0] < 4:
-            return Response(Response.LEVEL_LOW)
+            return Response(Tip.LEVEL_LOW)
         elif mean_week < 7:
-            return Response(Response.LEVEL_MEDIUM)
+            return Response(Tip.LEVEL_MEDIUM)
         else:
-            return Response(Response.LEVEL_GOOD)
+            return Response(Tip.LEVEL_GOOD)
     else:
         if deviation_week > 4:
             # Base it soley on today's value
             if data[0] < 4:
-                return Response(Response.LEVEL_LOW)
+                return Response(Tip.LEVEL_LOW)
             elif data[0] < 7:
-                return Response(Response.LEVEL_MEDIUM)
+                return Response(Tip.LEVEL_MEDIUM)
             else:
-                return Response(Response.LEVEL_GOOD)
+                return Response(Tip.LEVEL_GOOD)
         elif data[0] < 4 and (mean_3 < 4 and (mean_month > 7 or mean_week > 7)):
-            return Response(Response.LEVEL_CRITICAL)
+            return Response(Tip.LEVEL_CRITICAL)
         elif data[0] < 4:
-            return Response(Response.LEVEL_LOW)
+            return Response(Tip.LEVEL_LOW)
         elif mean_week < 7:
-            return Response(Response.LEVEL_MEDIUM)
+            return Response(Tip.LEVEL_MEDIUM)
         else:
-            return Response(Response.LEVEL_GOOD)
+            return Response(Tip.LEVEL_GOOD)
 
 
 
@@ -156,14 +156,6 @@ def decodeData(data):
 
             
 class Response:
-
-    # Constants for levels of mood
-    # Ordered by quality of mood in ascending order
-    LEVEL_CRITICAL = "CRITICAL"
-    LEVEL_LOW = "LOW"
-    LEVEL_MEDIUM = "MEDIUM"
-    LEVEL_GOOD = "GOOD"
-    LEVEL_NONE = "NONE"
 
     # NOTE this data algorithm SUCKS because this scale assumes everyone's average (5) is the same
     # in terms of data this fails drastically to truly reach the people who are depressed because it
