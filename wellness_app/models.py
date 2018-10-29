@@ -7,28 +7,31 @@ from django.db import models
 
 # User Information Model
 # Stores specfic user input for learning
-class UserInfo(models.Model):
+class AlexaUser(models.Model):
     
     # Amazon user ID, needed to store the aata specific to a user.
     user_id = models.CharField(max_length=255, primary_key=True)
 
-    wellness_record = models.CharField()
+    wellness_record = models.TextField()
 
 class Compliment(models.Model):
 
-    message = models.CharField()
+    message = models.TextField()
+
+    def __str__(self):
+        return self.message[:30]
 
 class Tip(models.Model):
-
-    message = models.CharField()
+    
+    message = models.TextField()
 
     # Constants for levels of mood
     # Ordered by quality of mood in ascending order
-    LEVEL_CRITICAL = 0
-    LEVEL_LOW = 1
-    LEVEL_MEDIUM = 2
-    LEVEL_GOOD = 3
-    LEVEL_NONE = 4
+    LEVEL_CRITICAL = 'CRITICAL'
+    LEVEL_LOW = 'LOW'
+    LEVEL_MEDIUM = 'MEDIUM'
+    LEVEL_GOOD = 'GOOD'
+    LEVEL_NONE = 'NONE'
 
     LEVEL_CHOICES = (
         (LEVEL_CRITICAL, 'CRITICAL'),
@@ -38,4 +41,7 @@ class Tip(models.Model):
         (LEVEL_NONE, 'NONE')
     )
 
-    level = models.SmallIntegerField(choices=LEVEL_CHOICES, null=False)
+    level = models.CharField(choices=LEVEL_CHOICES, null=False, max_length=8)
+
+    def __str__(self):
+        return self.message[:30] + "  Level: " + self.level

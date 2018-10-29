@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .models import UserInfo, Tip
+from .models import AlexaUser, Tip
 import statistics as stat
 import math
 
@@ -56,7 +56,6 @@ def getResponseType(data):
         mean_month = stat.mean(processable[0:31])
     else:
         mean_month = None
-        deviation_month = None
     
     # Start assigning response objects
     # 0-3 is a poor,
@@ -105,14 +104,14 @@ def getResponseType(data):
 
 def appendDataToAccount(day, userId):
     try:
-        user = UserInfo.objects.get(pk=userId)
+        user = AlexaUser.objects.get(pk=userId)
         lastDay = int(user.wellness_record[-1])
         if lastDay > 16:
             user.wellness_record = user.wellness_record + encodeData(day)
         else:
             user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
-    except UserInfo.DoesNotExist:
-        user = UserInfo(user_id=userId, data=encodeData(day))
+    except AlexaUser.DoesNotExist:
+        user = AlexaUser(user_id=userId, data=encodeData(day))
     
     user.save()
 
