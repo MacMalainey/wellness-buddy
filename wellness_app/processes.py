@@ -54,7 +54,6 @@ def getResponseType(data):
     
     if len(processable) > 20:
         mean_month = stat.mean(processable[0:31])
-        deviation_month = stat.pvariance(data, mu=mean_month)
     else:
         mean_month = None
         deviation_month = None
@@ -104,32 +103,56 @@ def getResponseType(data):
 
 
 
-def appendDataToAccount(data, userId):
+def appendDataToAccount(day, userId):
     try:
         user = UserInfo.objects.get(pk=userId)
+        lastDay = int(user.wellness_record[-1])
+        if lastDay > 16:
+            user.wellness_record = user.wellness_record + encodeData(day)
+        else:
+            user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
     except UserInfo.DoesNotExist:
-        pass
+        user = UserInfo(user_id=userId, data=encodeData(day))
+    
+    user.save()
 
 # data = decodeData(user.wellness_record[-math.ceil(31/2)::-1])
 
-def encodeData(data):
-    pass
+def encodeData(data, base=None):
+    if data is None:
+        data = 0xA
+    if base is not None:
+        data = data << 4
+        return chr(data + base)
+    else:
+        return chr(data)
+
+
+    
 
 def decodeData(data):
-    data = []
+    res = []
     # Loop through each hex value
-    for character in map(int, data):
-        for x in [0, 1]:
-            bits = character[4*x:4*(x+1)]
-            hx = bits.hex
-            if hx > 0x0 and hx < 0x9:
-                data.append(int(hx))
-            elif hx == 0xA:
-                data.append(None)
+    for character in map(ord, data):
+        if character < 0x1F:
+            if character > 0x0 and character < 0x9:
+                res.append(int(character))
+            elif character == 0xA:
+                res.append(None)
             else:
                 # TODO HANDLE MORE SPECIAL CASE CHARACTERS LATER
-                data.append(None)
-    return data
+                res.append(None)
+        else:
+            for x in [1, 0]:
+                hx = (character & (0b1111 << (4*x))) >> (4*x)
+                if hx > 0x0 and hx < 0x9:
+                    res.append(int(hx))
+                elif hx == 0xA:
+                    res.append(None)
+                else:
+                    # TODO HANDLE MORE SPECIAL CASE CHARACTERS LATER
+                    res.append(None)
+    return res
 
             
 class Response:
@@ -146,7 +169,7 @@ class Response:
     # in terms of data this fails drastically to truly reach the people who are depressed because it
     # assumes that they will always respond 1-3 which may not be the case.
 
-    # A better data science would be to have a benchmark number for each person to measure around as their being "good"
+    # A better algorithm would be to have a benchmark number for each person to measure around as their being "good"
 
     def __init__(self, suggested):
         self.suggested = suggested
