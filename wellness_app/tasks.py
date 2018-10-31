@@ -6,6 +6,7 @@ from .processes import appendDataToUserObject
 
 @shared_task
 def nullDay():
+    print("Adding null input to all users who have no posted today")
     time = datetime.time(datetime.datetime.now().hour)
     userObjects = AlexaUser.objects.filter(time_zone=time, has_updated=False)
     for user in userObjects:
