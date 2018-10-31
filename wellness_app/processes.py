@@ -3,17 +3,18 @@
 from .models import AlexaUser, Tip
 import statistics as stat
 import math
+import random
 
 def getResponseType(data):
 
     # If it was a 0 day it is automatically critical
     if(data[0] < 2):
-        return Response(Tip.LEVEL_CRITICAL)
+        return getTip(Tip.LEVEL_CRITICAL)
 
     daysStored = len(data)
 
     if daysStored < 5:
-        return Response(Tip.LEVEL_NONE)
+        return getTip(Tip.LEVEL_NONE)
     
     processable = []
 
@@ -42,7 +43,7 @@ def getResponseType(data):
         deviation_week = stat.pvariance(data, mu=mean_week)
     else:
         if(mean_3 is None):
-            return Response(Tip.LEVEL_NONE)
+            return getTip(Tip.LEVEL_NONE)
         else:
             mean_week = None
             deviation_week = None
@@ -65,38 +66,38 @@ def getResponseType(data):
     if deviation_week > 4:
             # Base it soley on today's value
             if data[0] < 4:
-                return Response(Tip.LEVEL_LOW)
+                return getTip(Tip.LEVEL_LOW)
             elif data[0] < 7:
-                return Response(Tip.LEVEL_MEDIUM)
+                return getTip(Tip.LEVEL_MEDIUM)
             else:
-                return Response(Tip.LEVEL_GOOD)
+                return getTip(Tip.LEVEL_GOOD)
 
     if mean_3 is None:
         if data[0] < 4 and mean_week < 4 and mean_month > 7:
-            return Response(Tip.LEVEL_CRITICAL)
+            return getTip(Tip.LEVEL_CRITICAL)
         elif data[0] < 4:
-            return Response(Tip.LEVEL_LOW)
+            return getTip(Tip.LEVEL_LOW)
         elif mean_week < 7:
-            return Response(Tip.LEVEL_MEDIUM)
+            return getTip(Tip.LEVEL_MEDIUM)
         else:
-            return Response(Tip.LEVEL_GOOD)
+            return getTip(Tip.LEVEL_GOOD)
     else:
         if deviation_week > 4:
             # Base it soley on today's value
             if data[0] < 4:
-                return Response(Tip.LEVEL_LOW)
+                return getTip(Tip.LEVEL_LOW)
             elif data[0] < 7:
-                return Response(Tip.LEVEL_MEDIUM)
+                return getTip(Tip.LEVEL_MEDIUM)
             else:
-                return Response(Tip.LEVEL_GOOD)
+                return getTip(Tip.LEVEL_GOOD)
         elif data[0] < 4 and (mean_3 < 4 and (mean_month > 7 or mean_week > 7)):
-            return Response(Tip.LEVEL_CRITICAL)
+            return getTip(Tip.LEVEL_CRITICAL)
         elif data[0] < 4:
-            return Response(Tip.LEVEL_LOW)
+            return getTip(Tip.LEVEL_LOW)
         elif mean_week < 7:
-            return Response(Tip.LEVEL_MEDIUM)
+            return getTip(Tip.LEVEL_MEDIUM)
         else:
-            return Response(Tip.LEVEL_GOOD)
+            return getTip(Tip.LEVEL_GOOD)
 
 
 
@@ -154,13 +155,7 @@ def decodeData(data):
     return res
 
             
-class Response:
-
-    # NOTE this data algorithm SUCKS because this scale assumes everyone's average (5) is the same
-    # in terms of data this fails drastically to truly reach the people who are depressed because it
-    # assumes that they will always respond 1-3 which may not be the case.
-
-    # A better algorithm would be to have a benchmark number for each person to measure around as their being "good"
-
-    def __init__(self, suggested):
-        self.suggested = suggested
+def getTip(tip_level):
+    tips = Tip.objects.filter(level=tip_level)
+    max_tip_index = len(tips)
+    return tips[random.randint(0, max_tip_index)].message
