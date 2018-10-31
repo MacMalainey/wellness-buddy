@@ -1,9 +1,10 @@
 from __future__ import absolute_import, unicode_literals
+from celery import app
 from .models import AlexaUser
 import datetime
 from .processes import appendDataToUserObject
 
-
+@app.task
 def nullDay():
     print("Adding null input to all users who have no posted today")
     time = datetime.time(datetime.datetime.now().hour)
