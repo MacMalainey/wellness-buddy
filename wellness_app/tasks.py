@@ -1,10 +1,10 @@
 from __future__ import absolute_import, unicode_literals
-from celery import Celery
+from celery import shared_task
 from .models import AlexaUser
 import datetime
 from .processes import appendDataToUserObject
 
-@app.task
+@shared_task
 def nullDay():
     time = datetime.time(datetime.datetime.now().hour)
     userObjects = AlexaUser.objects.filter(time_zone=time, has_updated=False)
