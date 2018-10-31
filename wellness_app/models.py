@@ -14,6 +14,10 @@ class AlexaUser(models.Model):
 
     wellness_record = models.TextField()
 
+    has_updated = models.BooleanField(default=False)
+
+    time_zone = models.TimeField()
+
 class Compliment(models.Model):
 
     message = models.TextField()
