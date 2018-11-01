@@ -21,8 +21,8 @@ def getResponseType(data):
 
     if len(processable) == 3:
         # Get the average for the last 3 days
-        mean_3 = stat.mean(processable[0:3])
-    if len(processable) == 1:
+        mean_3 = stat.mean(processable)
+    elif len(processable) == 1:
         return getTip(Tip.LEVEL_NONE)
     else:
         # If not enough data set value to None to indicate this
@@ -32,7 +32,7 @@ def getResponseType(data):
     # 0-3 is a poor,
     # 4-6 is a medium/mixed
     # 7-9 is a high
-    if data[0] < 4 and mean_3 > 4.6:
+    if data[0] < 3 and mean_3 > 4.5:
         return getTip(Tip.LEVEL_CRITICAL)
     elif data[0] < 4:
         return getTip(Tip.LEVEL_LOW)
