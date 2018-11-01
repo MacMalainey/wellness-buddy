@@ -17,7 +17,12 @@ class DataEncodeTestCase(TestCase):
 
 class ResponseTypeTestCase(TestCase):
     def setUp(self):
-        pass
+        for x in [
+            Tip.LEVEL_CRITICAL, Tip.LEVEL_GOOD, Tip.LEVEL_LOW,
+            Tip.LEVEL_MEDIUM, Tip.LEVEL_NONE
+        ]:
+            Tip.objects.create(message="", level=x)
+            Tip.objects.create(message="", level=x)
 
     def test_response_level(self):
         self.assertEqual(

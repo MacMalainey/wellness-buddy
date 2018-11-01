@@ -54,7 +54,7 @@ def appendDataToAccount(day, userId):
         else:
             user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
     except AlexaUser.DoesNotExist:
-        user = AlexaUser(user_id=userId, data=encodeData(day))
+        user = AlexaUser.objects.create(user_id=userId, data=encodeData(day))
     
     user.save()
     return user
