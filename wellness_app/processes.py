@@ -152,8 +152,8 @@ def decodeData(data):
     res = []
     # Loop through each hex value
     for character in map(ord, data):
-        if character < 0x1F:
-            if character > 0x0 and character < 0x9:
+        if character < 0x10:
+            if character >= 0x0 and character =< 0x9:
                 res.append(int(character))
             elif character == 0xA:
                 res.append(None)
@@ -163,7 +163,7 @@ def decodeData(data):
         else:
             for x in [1, 0]:
                 hx = (character & (0b1111 << (4*x))) >> (4*x)
-                if hx > 0x0 and hx < 0x9:
+                if hx >= 0x0 and hx <= 0x9:
                     res.append(int(hx))
                 elif hx == 0xA:
                     res.append(None)
