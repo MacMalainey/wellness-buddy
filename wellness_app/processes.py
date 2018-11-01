@@ -118,4 +118,4 @@ def decodeData(data):
 def getTip(tip_level):
     tips = Tip.objects.filter(level=tip_level)
     max_tip_index = len(tips)
-    return tips[random.randint(0, max_tip_index)].message
+    return tips[random.randint(0, max_tip_index - 1)]

@@ -21,35 +21,35 @@ class ResponseTypeTestCase(TestCase):
 
     def test_response_level(self):
         self.assertEqual(
-            getResponseType([0, None, None]),
+            getResponseType([0, None, None]).level,
             Tip.LEVEL_CRITICAL
         )
         self.assertEqual(
-            getResponseType([0, 7, 5]),
+            getResponseType([0, 7, 5]).level,
             Tip.LEVEL_CRITICAL
         )
         self.assertEqual(
-            getResponseType([7]),
+            getResponseType([7]).level,
             Tip.LEVEL_NONE
         )
         self.assertEqual(
-            getResponseType([7, None, None, None, None, None, None, None]),
+            getResponseType([7, None, None, None, None, None, None, None]).level,
             Tip.LEVEL_NONE
         )
         self.assertEqual(
-            getResponseType([2, 6, 6]),
+            getResponseType([2, 6, 6]).level,
             Tip.LEVEL_CRITICAL
         )
         self.assertEqual(
-            getResponseType([3, 8, 2]),
+            getResponseType([3, 8, 2]).level,
             Tip.LEVEL_LOW
         )
         self.assertEqual(
-            getResponseType([5, 8, 2]),
+            getResponseType([5, 8, 2]).level,
             Tip.LEVEL_MEDIUM
         )
         self.assertEqual(
-            getResponseType([8, 8, 2]),
+            getResponseType([8, 8, 2]).level,
             Tip.LEVEL_GOOD
         )
 
