@@ -129,11 +129,18 @@ def appendDataToUserObject(day, user):
 
 # data = decodeData(user.wellness_record[-math.ceil(31/2)::-1])
 
-def encodeData(data, base=None):
-    if data is None:
+def encodeData(data, base=-1):
+    if data > 0xF:
         data = 0xA
-    if base is not None:
+    elif data is None:
+        data = 0xA
+    
+    if base != -1:
         data = data << 4
+        if base > 0xF:
+            base = 0xA
+        elif base is None:
+            base = 0xA
         return chr(data + base)
     else:
         return chr(data)
