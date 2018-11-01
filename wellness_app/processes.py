@@ -10,11 +10,6 @@ def getResponseType(data):
     # If it was a 0 day it is automatically critical
     if(data[0] < 2):
         return getTip(Tip.LEVEL_CRITICAL)
-
-    daysStored = len(data)
-
-    if daysStored < 5:
-        return getTip(Tip.LEVEL_NONE)
     
     processable = []
 
@@ -24,80 +19,27 @@ def getResponseType(data):
         if element is not None:
             processable.append(element)
 
-    if len(processable) > 1:
+    if len(processable) == 3:
         # Get the average for the last 3 days
         mean_3 = stat.mean(processable[0:3])
+    if len(processable) == 1:
+        return getTip(Tip.LEVEL_NONE)
     else:
         # If not enough data set value to None to indicate this
         mean_3 = None
-    
-
-    # Get the data for the week
-    for element in data[4:7]:
-        if element is not None:
-            processable.append(element)
-    
-    if len(processable) > 5:
-        # Get the mean for the last week
-        mean_week = stat.mean(processable[0:7])
-        deviation_week = stat.pvariance(data, mu=mean_week)
-    else:
-        if(mean_3 is None):
-            return getTip(Tip.LEVEL_NONE)
-        else:
-            mean_week = None
-            deviation_week = None
-
-    # Get the rest of the data for the rest of the month
-    for element in data[8:31]:
-        if element is not None:
-            processable.append(element)
-    
-    if len(processable) > 20:
-        mean_month = stat.mean(processable[0:31])
-    else:
-        mean_month = None
     
     # Start assigning response objects
     # 0-3 is a poor,
     # 4-6 is a medium/mixed
     # 7-9 is a high
-
-    if deviation_week > 4:
-            # Base it soley on today's value
-            if data[0] < 4:
-                return getTip(Tip.LEVEL_LOW)
-            elif data[0] < 7:
-                return getTip(Tip.LEVEL_MEDIUM)
-            else:
-                return getTip(Tip.LEVEL_GOOD)
-
-    if mean_3 is None:
-        if data[0] < 4 and mean_week < 4 and mean_month > 7:
-            return getTip(Tip.LEVEL_CRITICAL)
-        elif data[0] < 4:
-            return getTip(Tip.LEVEL_LOW)
-        elif mean_week < 7:
-            return getTip(Tip.LEVEL_MEDIUM)
-        else:
-            return getTip(Tip.LEVEL_GOOD)
+    if data[0] < 4 and mean_3 > 4.6:
+        return getTip(Tip.LEVEL_CRITICAL)
+    elif data[0] < 4:
+        return getTip(Tip.LEVEL_LOW)
+    elif data[0] < 7:
+        return getTip(Tip.LEVEL_MEDIUM)
     else:
-        if deviation_week > 4:
-            # Base it soley on today's value
-            if data[0] < 4:
-                return getTip(Tip.LEVEL_LOW)
-            elif data[0] < 7:
-                return getTip(Tip.LEVEL_MEDIUM)
-            else:
-                return getTip(Tip.LEVEL_GOOD)
-        elif data[0] < 4 and (mean_3 < 4 and (mean_month > 7 or mean_week > 7)):
-            return getTip(Tip.LEVEL_CRITICAL)
-        elif data[0] < 4:
-            return getTip(Tip.LEVEL_LOW)
-        elif mean_week < 7:
-            return getTip(Tip.LEVEL_MEDIUM)
-        else:
-            return getTip(Tip.LEVEL_GOOD)
+        return getTip(Tip.LEVEL_GOOD)
 
 
 
@@ -106,8 +48,8 @@ def getResponseType(data):
 def appendDataToAccount(day, userId):
     try:
         user = AlexaUser.objects.get(pk=userId)
-        lastDay = int(user.wellness_record[-1])
-        if lastDay > 16:
+        lastDay = ord(user.wellness_record[-1])
+        if lastDay > 0xF:
             user.wellness_record = user.wellness_record + encodeData(day)
         else:
             user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
@@ -120,7 +62,7 @@ def appendDataToAccount(day, userId):
 # Appends data to a known user that for sure exists in the database (i.e. pulled already)
 def appendDataToUserObject(day, user):
     lastDay = int(user.wellness_record[-1])
-    if lastDay > 16:
+    if lastDay > 0xF:
         user.wellness_record = user.wellness_record + encodeData(day)
     else:
         user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
