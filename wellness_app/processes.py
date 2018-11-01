@@ -153,7 +153,7 @@ def decodeData(data):
     # Loop through each hex value
     for character in map(ord, data):
         if character < 0x10:
-            if character >= 0x0 and character =< 0x9:
+            if character >= 0x0 and character <= 0x9:
                 res.append(int(character))
             elif character == 0xA:
                 res.append(None)
