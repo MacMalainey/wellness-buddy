@@ -1,6 +1,6 @@
 from django_alexa.api import fields, intent, ResponseBuilder
-from wellness_app.processes import getCompliment, getTip
-from wellness_app.models import Tip
+from .processes import getCompliment, getTip
+from .models import Tip
 
 
 @intent
