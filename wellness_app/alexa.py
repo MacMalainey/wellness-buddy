@@ -12,7 +12,7 @@ class rateSlots(fields.AmazonSlots):
 
 
 @intent(slots= rateSlots)
-def start(session, rate):
+def Start(session, rate):
     kwargs = {}
     kwargs['message'] = 'DEBUG MESSAGE'
     kwargs ['end_session'] = True
@@ -20,11 +20,11 @@ def start(session, rate):
     return ResponseBuilder.create_response(**kwargs)
 
 @intent
-def compliments(session):
+def Compliments(session):
     return ResponseBuilder.create_response(message= getCompliment().message, 
         end_session = True, launched= session['launched'])
 
 @intent
-def tips(session):
+def WellnessTips(session):
     return ResponseBuilder.create_response(message= getTip(Tip.LEVEL_MEDIUM).message, 
     end_session = True, launched= session['launched'])
