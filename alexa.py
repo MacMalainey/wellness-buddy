@@ -1,39 +1,33 @@
-<<<<<<< HEAD
+from django_alexa.api import fields, intent, ResponseBuilder
+from wellness_app.processes import getCompliment, getTip
+from wellness_app.models import Tip
+
+
 @intent
 def LaunchRequest(session):
     return ResponseBuilder.create_response(message= 'Hello!, I am your wellness buddy!', reprompt='what can I help you with?',end_session = False, launched= True)
 
-class rateSlots(fields.AmazonSlots);
-    rate = fields.AmazonCustom(label= "list_of_numbers")
-    mood = fields.AmazonCustom(label = 'list_of_moods')
+class rateSlots(fields.AmazonSlots):
+    rate = fields.AmazonNumber()
 
 
 @intent(slots= rateSlots)
-def start(session, rate, tip):
+def start(session, rate):
+    kwargs = {}
     if session.get('launched'):
-        kwargs['message'] = 'How do you feel from one to ten"
-        //how do i insert a the number that is spoken and push it into the database
-        kwargs ['reprompt'] = Tip
-        kwargs ['end_session'] = False
+        kwargs['message'] = 'DEBUG MESSAGE'
+        kwargs ['end_session'] = True
         kwargs ['launched'] = session['launched']
     return ResponseBuilder.create_response(**kwargs)
 
 @intent
-def compliments(session)
+def compliments(session):
     if session.get('launched'):
-        return ResponseBuilder.create_response(message= Compliment(), reprompt= 'Is there anything else I can help you with?', end_session = False, launched= True)
+        return ResponseBuilder.create_response(message= getCompliment().message, 
+            end_session = True, launched= session['launched'])
 
 @intent
-def tips(session)
+def tips(session):
     if session.get('launched'):
-        return ResponseBuilder.create_response(message= getTip(), reprompt= 'Is there anything else I can help you with?', end_session = False, launched= True)
-
-
-
-
-
-
-=======
-from django_alexa.api import fields, intent, ResponseBuilder
-from wellness_app.processes import *
->>>>>>> abb9d41ad061e69ac98fd9b580b0dc04206ee66d
+        return ResponseBuilder.create_response(message= getTip(Tip.LEVEL_MEDIUM).message, 
+            end_session = True, launched= session['launched'])

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .models import AlexaUser, Tip
+from .models import AlexaUser, Tip, Compliment
 import statistics as stat
 import math
 import random
@@ -119,3 +119,8 @@ def getTip(tip_level):
     tips = Tip.objects.filter(level=tip_level)
     max_tip_index = len(tips)
     return tips[random.randint(0, max_tip_index - 1)]
+
+def getCompliment():
+    comp = Compliment.objects.all()
+    max_comp_index = len(comp)
+    return comp[random.randint(0, max_comp_index - 1)]
