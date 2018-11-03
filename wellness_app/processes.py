@@ -90,9 +90,9 @@ def decodeData(data):
     # Loop through each hex value
     for character in map(ord, data):
         if character < 0x10:
-            if character >= 0x0 and character <= 0x9:
+            if character > 0x0 and character <= 0xA:
                 res.append(int(character))
-            elif character == 0xA:
+            elif character == 0xB:
                 res.append(None)
             else:
                 # TODO HANDLE MORE SPECIAL CASE CHARACTERS LATER
@@ -100,9 +100,9 @@ def decodeData(data):
         else:
             for x in [1, 0]:
                 hx = (character & (0b1111 << (4*x))) >> (4*x)
-                if hx >= 0x0 and hx <= 0x9:
+                if hx >= 0x1 and hx <= 0xA:
                     res.append(int(hx))
-                elif hx == 0xA:
+                elif hx == 0xB:
                     res.append(None)
                 else:
                     # TODO HANDLE MORE SPECIAL CASE CHARACTERS LATER
