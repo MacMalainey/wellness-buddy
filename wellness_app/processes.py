@@ -135,3 +135,18 @@ def response_template():
     }
 
     return response_dict
+
+
+def parseRequest(requestDictionary):
+    request = {
+        "userId": requestDictionary["session"]["userId"],
+        "intentType": requestDictionary["request"]["type"]
+    }
+
+    if requestDictionary["request"]["type"] == "IntentRequest":
+        request["name"] = requestDictionary["intent"]["name"]
+        if requestDictionary["intent"]["name"] == "Start":
+            request["rate"] = requestDictionary["intent"]["slots"]["SlotName"]["value"]
+
+    return requestDictionary
+
