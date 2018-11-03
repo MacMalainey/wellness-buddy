@@ -121,17 +121,13 @@ def getCompliment():
 
 def response_template():
     response_dict = {
-        "body": {
-            "version": "1.0",
-            "response": {
-                "outputSpeech": {
-                    "type": "PlainText",
-                    "text": ""
-                },
-                "shouldEndSession": True
+        "version": "1.0",
+        "response": {
+            "outputSpeech": {
+                "type": "PlainText",
+                "text": ""
             },
-            "sessionAttributes": {}
-        }
+        },
     }
 
     return response_dict

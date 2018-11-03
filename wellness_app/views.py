@@ -7,12 +7,14 @@ from .models import Tip
 
 def alexa_ask(request):
     response = response_template()
-    info = {}
+    info = {
+        "request" = "LaunchRequest"
+    }
     # response = responseTemplate()
     if info['request'] == "LaunchRequest":
         response['shouldEndSession'] = False
-        response['body']['response']['outputSpeech']['text'] = "Hello."
-        response['body']['reprompt'] = {
+        response['response']['outputSpeech']['text'] = "Hello."
+        response['reprompt'] = {
             "outputSpeech": {
                 "type": "PlainText",
                 "text": "What can I help you with?"
@@ -20,17 +22,17 @@ def alexa_ask(request):
         }
     else:
         if info['intentName'] == 'Compliments':
-            response['body']['response']['outputSpeech']['text'] = getCompliment().message
+            response['response']['outputSpeech']['text'] = getCompliment().message
         elif info['intentName'] == 'WellnessTip':
             response['message'] = getTip(Tip.LEVEL_MEDIUM)
         elif info['intentName'] == 'Start':
             user = getOrNewUser(info['userId'])
             data = decodeData(user.wellness_record[-1, -2])
             data.insert(0, info['rate'])
-            response['body']['response']['outputSpeech']['text'] = getTip(getResponseType(data)).message
+            response['response']['outputSpeech']['text'] = getTip(getResponseType(data)).message
             appendDataToUserObject(info['rate'], user)
         elif info['intentName'] == 'AMAZON.FallbackIntent':
-            response['body']['response']['outputSpeech']['text'] = "Sorry I can't help you with that."
+            response['response']['outputSpeech']['text'] = "Sorry I can't help you with that."
             response['reprompt'] = {
 				"outputSpeech": {
 					"type": "PlainText",
