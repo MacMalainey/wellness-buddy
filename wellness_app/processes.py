@@ -124,3 +124,4 @@ def getCompliment():
     comp = Compliment.objects.all()
     max_comp_index = len(comp)
     return comp[random.randint(0, max_comp_index - 1)]
+
