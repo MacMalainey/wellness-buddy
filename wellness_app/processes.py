@@ -49,7 +49,7 @@ def getOrNewUser(userId):
     try:
         user = AlexaUser.objects.get(pk=userId)
     except AlexaUser.DoesNotExist:
-        user = AlexaUser.objects.create(user_id=userId, data=encodeData(day))
+        user = AlexaUser.objects.create(user_id=userId, data="")
         user.save()
     return user
 
@@ -135,14 +135,14 @@ def response_template():
 
 def parseRequest(postRequest):
     request = {
-        "userId": postRequest["session"]["userId"],
+        "userId": postRequest["session"]['user']["userId"],
         "intentType": postRequest["request"]["type"]
     }
 
     if postRequest["request"]["type"] == "IntentRequest":
-        request["name"] = postRequest["intent"]["name"]
-        if postRequest["intent"]["name"] == "Start":
-            request["rate"] = postRequest["intent"]["slots"]["rate"]["value"]
+        request["name"] = postRequest["request"]["intent"]["name"]
+        if postRequest["request"]["intent"]["name"] == "Start":
+            request["rate"] = postRequest["request"]["intent"]["slots"]["rate"]["value"]
 
-    return postRequest
+    return request
 
