@@ -8,7 +8,7 @@ import random
 def getResponseType(data):
 
     # If it was a 0 day it is automatically critical
-    if(data[0] < 2):
+    if(data[0] < 3):
         return getTip(Tip.LEVEL_CRITICAL)
 
     processable = []
@@ -32,11 +32,11 @@ def getResponseType(data):
     # 0-3 is a poor,
     # 4-6 is a medium/mixed
     # 7-9 is a high
-    if data[0] < 3 and mean_3 > 4.5:
+    if data[0] < 4 and mean_3 > 4.5:
         return getTip(Tip.LEVEL_CRITICAL)
-    elif data[0] < 4:
+    elif data[0] < 5:
         return getTip(Tip.LEVEL_LOW)
-    elif data[0] < 7:
+    elif data[0] < 8:
         return getTip(Tip.LEVEL_MEDIUM)
     else:
         return getTip(Tip.LEVEL_GOOD)
@@ -49,7 +49,7 @@ def getOrNewUser(userId):
     try:
         user = AlexaUser.objects.get(pk=userId)
     except AlexaUser.DoesNotExist:
-        user = AlexaUser.objects.create(user_id=userId, data="")
+        user = AlexaUser.objects.create(user_id=userId, wellness_record="")
         user.save()
     return user
 
@@ -68,16 +68,16 @@ def appendDataToUserObject(day, user):
 
 def encodeData(data, base=-1):
     if data > 0xF:
-        data = 0xA
+        data = 0xB
     elif data is None:
-        data = 0xA
+        data = 0xB
 
     if base != -1:
         data = data << 4
         if base > 0xF:
-            base = 0xA
+            base = 0xB
         elif base is None:
-            base = 0xA
+            base = 0xB
         return chr(data + base)
     else:
         return chr(data)
@@ -100,7 +100,7 @@ def decodeData(data):
         else:
             for x in [1, 0]:
                 hx = (character & (0b1111 << (4*x))) >> (4*x)
-                if hx >= 0x1 and hx <= 0xA:
+                if hx > 0x0 and hx <= 0xA:
                     res.append(int(hx))
                 elif hx == 0xB:
                     res.append(None)
@@ -113,6 +113,8 @@ def decodeData(data):
 def getTip(tip_level):
     tips = Tip.objects.filter(level=tip_level)
     max_tip_index = len(tips)
+    if len(max_tip_index == 1):
+        return tips[0]
     return tips[random.randint(0, max_tip_index - 1)]
 
 

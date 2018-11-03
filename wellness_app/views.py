@@ -27,9 +27,9 @@ def alexa_ask(request):
         elif info['name'] == 'Start':
             user = getOrNewUser(info['userId'])
             data = decodeData(user.wellness_record[-1: -2])
-            data.insert(0, int(info['rate']) - 1)
+            data.insert(0, int(info['rate']))
             response['response']['outputSpeech']['text'] = getResponseType(data).message
-            # appendDataToUserObject(int(info['rate']) - 1, user)
+            appendDataToUserObject(int(info['rate']), user)
         elif info['name'] == 'AMAZON.FallbackIntent':
             response['response']['outputSpeech']['text'] = "Sorry I can't help you with that."
             response['reprompt'] = {
