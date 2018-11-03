@@ -56,13 +56,13 @@ def getOrNewUser(userId):
 # Appends data to a known user that for sure exists in the database (i.e. pulled already)
 def appendDataToUserObject(day, user):
     if(len(user.wellness_record) > 0):
-        lastDay = int(user.wellness_record[-1])
+        lastDay = user.wellness_record[-1]
+        if ord(lastDay) > 0xF:
+            user.wellness_record = user.wellness_record + encodeData(day)
+        else:
+            user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
     else:
-        lastDay = 0xF
-    if lastDay > 0xF:
         user.wellness_record = user.wellness_record + encodeData(day)
-    else:
-        user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
 
     user.save()
 
