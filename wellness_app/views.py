@@ -23,7 +23,7 @@ def alexa_ask(request):
         if info['name'] == 'Compliment':
             response['response']['outputSpeech']['text'] = getCompliment().message
         elif info['name'] == 'WellnessTips':
-            response['message'] = getTip(Tip.LEVEL_MEDIUM).message
+            response['response']['outputSpeech']['text'] = getTip(Tip.LEVEL_MEDIUM).message
         elif info['name'] == 'Start':
             user = getOrNewUser(info['userId'])
             data = decodeData(user.wellness_record[-1: -2])
