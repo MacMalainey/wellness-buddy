@@ -135,14 +135,14 @@ def response_template():
 
 def parseRequest(postRequest):
     request = {
-        "userId": postRequest.session.userId,
-        "intentType": postRequest.request.type
+        "userId": postRequest["session"]["userId"],
+        "intentType": postRequest["request"]["type"]
     }
 
-    if postRequest.request.type == "IntentRequest":
-        request["name"] = postRequest.intent.name
-        if postRequest.intent.name == "Start":
-            request["rate"] = postRequest.intent.slots.rate.value
+    if postRequest["request"]["type"] == "IntentRequest":
+        request["name"] = postRequest["intent"]["name"]
+        if postRequest["intent"]["name"] == "Start":
+            request["rate"] = postRequest["intent"]["slots"]["rate"]["value"]
 
     return postRequest
 
