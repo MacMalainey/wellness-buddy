@@ -10,7 +10,7 @@ def getResponseType(data):
     # If it was a 0 day it is automatically critical
     if(data[0] < 2):
         return getTip(Tip.LEVEL_CRITICAL)
-    
+
     processable = []
 
     # Get the data for the most recent three days
@@ -27,7 +27,7 @@ def getResponseType(data):
     else:
         # If not enough data set value to None to indicate this
         mean_3 = None
-    
+
     # Start assigning response objects
     # 0-3 is a poor,
     # 4-6 is a medium/mixed
@@ -44,19 +44,18 @@ def getResponseType(data):
 
 
 
-# Appends data to a uuser with the given userId, if no user exists it will create a new user.
-def appendDataToAccount(day, userId):
+# Pulls the user with the given userId, if no user exists it will create a new user.
+def getOrNewUser(userId):
     try:
         user = AlexaUser.objects.get(pk=userId)
-        lastDay = ord(user.wellness_record[-1])
-        if lastDay > 0xF:
-            user.wellness_record = user.wellness_record + encodeData(day)
-        else:
-            user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
     except AlexaUser.DoesNotExist:
         user = AlexaUser.objects.create(user_id=userId, data=encodeData(day))
-    
+<<<<<<< HEAD
+        user.save()
+=======
+
     user.save()
+>>>>>>> e57cf089262737814faa247ac247f6a0ab579141
     return user
 
 # Appends data to a known user that for sure exists in the database (i.e. pulled already)
@@ -66,17 +65,15 @@ def appendDataToUserObject(day, user):
         user.wellness_record = user.wellness_record + encodeData(day)
     else:
         user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
-    
-    user.save()
 
-# data = decodeData(user.wellness_record[-math.ceil(31/2)::-1])
+    user.save()
 
 def encodeData(data, base=-1):
     if data > 0xF:
         data = 0xA
     elif data is None:
         data = 0xA
-    
+
     if base != -1:
         data = data << 4
         if base > 0xF:
@@ -88,7 +85,7 @@ def encodeData(data, base=-1):
         return chr(data)
 
 
-    
+
 
 def decodeData(data):
     res = []
@@ -114,7 +111,7 @@ def decodeData(data):
                     res.append(None)
     return res
 
-            
+
 def getTip(tip_level):
     tips = Tip.objects.filter(level=tip_level)
     max_tip_index = len(tips)
@@ -125,3 +122,22 @@ def getCompliment():
     max_comp_index = len(comp)
     return comp[random.randint(0, max_comp_index - 1)]
 
+<<<<<<< HEAD
+=======
+
+def response_template():
+    responseDict = {
+	"body": {
+		"version": "1.0",
+		"response": {
+			"outputSpeech": {
+				"type": "PlainText",
+				"text": "",
+			},
+			"shouldEndSession": True
+		},
+		"sessionAttributes": {}
+	}
+
+    return responseDict
+>>>>>>> 619fa6228eb998668f30be4f77c2600eeb87c82a
