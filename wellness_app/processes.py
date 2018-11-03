@@ -44,19 +44,13 @@ def getResponseType(data):
 
 
 
-# Appends data to a uuser with the given userId, if no user exists it will create a new user.
-def appendDataToAccount(day, userId):
+# Pulls the user with the given userId, if no user exists it will create a new user.
+def getOrNewUser(userId):
     try:
         user = AlexaUser.objects.get(pk=userId)
-        lastDay = ord(user.wellness_record[-1])
-        if lastDay > 0xF:
-            user.wellness_record = user.wellness_record + encodeData(day)
-        else:
-            user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
     except AlexaUser.DoesNotExist:
         user = AlexaUser.objects.create(user_id=userId, data=encodeData(day))
-    
-    user.save()
+        user.save()
     return user
 
 # Appends data to a known user that for sure exists in the database (i.e. pulled already)
@@ -68,8 +62,6 @@ def appendDataToUserObject(day, user):
         user.wellness_record = user.wellness_record + encodeData(day, base=ord(lastDay))
     
     user.save()
-
-# data = decodeData(user.wellness_record[-math.ceil(31/2)::-1])
 
 def encodeData(data, base=-1):
     if data > 0xF:
