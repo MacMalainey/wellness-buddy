@@ -50,12 +50,7 @@ def getOrNewUser(userId):
         user = AlexaUser.objects.get(pk=userId)
     except AlexaUser.DoesNotExist:
         user = AlexaUser.objects.create(user_id=userId, data=encodeData(day))
-<<<<<<< HEAD
         user.save()
-=======
-
-    user.save()
->>>>>>> e57cf089262737814faa247ac247f6a0ab579141
     return user
 
 # Appends data to a known user that for sure exists in the database (i.e. pulled already)
@@ -117,27 +112,27 @@ def getTip(tip_level):
     max_tip_index = len(tips)
     return tips[random.randint(0, max_tip_index - 1)]
 
+
 def getCompliment():
     comp = Compliment.objects.all()
     max_comp_index = len(comp)
     return comp[random.randint(0, max_comp_index - 1)]
 
-<<<<<<< HEAD
-=======
 
 def response_template():
-    responseDict = {
-	"body": {
-		"version": "1.0",
-		"response": {
-			"outputSpeech": {
-				"type": "PlainText",
-				"text": "",
-			},
-			"shouldEndSession": True
-		},
-		"sessionAttributes": {}
-	}
+    response_dict = {
+        "body": {
+            "version": "1.0",
+            "response": {
+                "outputSpeech": {
+                    "type": "PlainText",
+                    "text": "",
+                },
+                "shouldEndSession": True
+            },
+            "sessionAttributes": {}
+        }
+    }
 
-    return responseDict
->>>>>>> 619fa6228eb998668f30be4f77c2600eeb87c82a
+    return response_dict
+
