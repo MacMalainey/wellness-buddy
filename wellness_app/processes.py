@@ -132,7 +132,19 @@ def response_template():
             },
             "sessionAttributes": {}
         }
-    }
+,    }
 
     return response_dict
 
+
+def parseRequest(requestDictionary):
+    request = {
+        "userId": requestDictionary["session"]["userId"]
+    }
+    
+    if requestDictionary["request"]["type"] == "LaunchRequest":
+        request["rate"] = requestDictionary["request"]["type"]
+    elif requestDictionary["request"]["type"] == "IntentRequest":
+        request["name"] = requestDictionary["intent"]["name"]
+        if requestDictionary["intent"]["name"] == "Start":
+            request["rate"] = requestDictionary ["intent"]["slots"]["SlotName"]["value"]
