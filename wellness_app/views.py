@@ -8,7 +8,7 @@ from .models import Tip
 
 def alexa_ask(request):
     response = response_template()
-    info = parseRequest(json.loads(request['POST']))
+    info = parseRequest(request['POST'])
     # response = responseTemplate()
     if info['request'] == "LaunchRequest":
         response['shouldEndSession'] = False
