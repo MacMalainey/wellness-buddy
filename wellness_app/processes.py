@@ -126,7 +126,7 @@ def response_template():
             "response": {
                 "outputSpeech": {
                     "type": "PlainText",
-                    "text": "",
+                    "text": ""
                 },
                 "shouldEndSession": True
             },
@@ -135,4 +135,3 @@ def response_template():
     }
 
     return response_dict
-
