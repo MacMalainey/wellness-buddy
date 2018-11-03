@@ -2,14 +2,13 @@
 from __future__ import unicode_literals
 
 from django.http import JsonResponse
-from .processes import getOrNewUser, getCompliment, getTip, decodeData, appendDataToUserObject, response_template, getResponseType
+import json
+from .processes import getOrNewUser, getCompliment, getTip, decodeData, appendDataToUserObject, response_template, getResponseType, parseRequest
 from .models import Tip
 
 def alexa_ask(request):
     response = response_template()
-    info = {
-        "request" = "LaunchRequest"
-    }
+    info = parseRequest(json.loads(request['POST']))
     # response = responseTemplate()
     if info['request'] == "LaunchRequest":
         response['shouldEndSession'] = False
