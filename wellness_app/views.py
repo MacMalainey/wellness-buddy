@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.http import JsonResponse
-from .processes import *
+from .processes import getOrNewUser, getCompliment, getTip, decodeData, appendDataToUserObject, response_template, getResponseType
 from .models import Tip
 
 def alexa_ask(request):
